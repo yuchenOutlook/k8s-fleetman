@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-webapp
+spec:
+  selector:
+    app: webapp
+
+  ports:
+  - name: http
+    port: 80
+    nodePort: 30080
+    # targetPort: 80
+  
+  # type: ClusterIP
+  type: NodePort
+
+# locally in the minikube, you need to run 
+# kubectl port-forward svc/fleetman-webapp 30080:80
+# to map port 30080 to the port 80 of the service fleetman-webapp
+# Go to http://127.0.0.1:30080/ in your browser to see the pod running.
