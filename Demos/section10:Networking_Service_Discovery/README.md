@@ -1,3 +1,15 @@
+
+# Table of Contents
+1. [Networking and Service Discovery in Kubernetes](#networking-and-service-discovery-in-kubernetes)
+   - [Kubernetes DNS service: 'kube-dns' and 'coreDNS'](#kubernetes-dns-service-kube-dns-and-coredns)
+   - [Navigating namespaces and pods in Kubernetes](#navigating-namespaces-and-pods-in-kubernetes)
+2. [Service Discovery](#service-discovery-1)
+   - [Example of service discovery using an example script](#example-of-service-discovery-using-an-example-script)
+   - [Understanding how service discovery works within a web-app](#understanding-how-service-discovery-works-within-a-web-app)
+   - [Looking up "database" from the dnscore](#looking-up-the-database-from-the-dnscore)
+3. [Shortening "kubectl" to "k"](#shortening-kubectl-to-k)
+   - [Creating and using an alias for the kubectl command](#creating-and-using-an-alias-for-the-kubectl-command)
+
 # Networking and Service Discovery in Kubernetes
 ## Service Discovery
 Question: How do we networking containers together?
