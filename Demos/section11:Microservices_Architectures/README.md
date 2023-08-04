@@ -51,4 +51,105 @@ Go to http://localhost:30010/
 
 Use "admin" as username and password to sign in.
 
-### 2. 
+### 2. Deploy the position-simulator microservice.
+
+#### a. The position-simulator is a service without a RESTful API interface to tell it what to do. It simply sends message to the ActiveMQ, nothing else.
+
+
+#### b. In the source code, inside JourneySimulator.java:
+
+
+```java
+	public void run() 
+	{
+		try 
+		{
+			this.runVehicleSimulation();
+		} 
+		catch (InterruptedException e) 
+		{
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	/**
+	 * For each vehicle, a thread is started which simulates a journey for that vehicle. 
+	 * When all vehicles have completed, we start all over again. 
+	 * @throws InterruptedException 
+	 */
+	public void runVehicleSimulation() throws InterruptedException 
+	{
+		Map<String, List<String>> reports = setUpData();
+		threadPool = Executors.newCachedThreadPool();		
+		boolean stillRunning = true;
+		while (stillRunning)
+		{
+			List<Callable<Object>> calls = new ArrayList<>();
+
+			for (String vehicleName : reports.keySet())
+			{
+				// kick off a message sending thread for this vehicle.
+				calls.add(new Journey(vehicleName, reports.get(vehicleName), template, queueName));
+			}
+			
+			threadPool.invokeAll(calls);
+			if (threadPool.isShutdown())
+			{
+				stillRunning = false;
+				System.out.println("Asked to finish!");
+			}
+		}
+	}
+```
+
+The above code defines how the threadpool is used to kick off a message sending thread for the vehicle to the queue.
+
+Then in the program entry (PositionsimulatorApplication.java), it starts the simulation from there(mainThread.start()):
+```java
+@SpringBootApplication
+public class PositionsimulatorApplication {
+
+	public static void main(String[] args) throws IOException, InterruptedException 
+	{
+		try(ConfigurableApplicationContext ctx = SpringApplication.run(PositionsimulatorApplication.class))
+		{
+			final JourneySimulator simulator = ctx.getBean(JourneySimulator.class);
+
+			Thread mainThread = new Thread(simulator);
+			mainThread.start();
+		}
+		
+	}
+
+}
+```
+
+#### c. The environment varaibles are needed to determine which resources .properties file to use.
+![Alt text](image-1.png)
+For example in "application-production-microservice.properties":
+![Alt text](image-2.png)
+
+The environment variable is specified in deployment part of the position-simulator in workloads.yaml
+![Alt text](image-3.png)
+
+Now from the chatGpt, it says the spring.activemq.broker-url is configured in the jmsTemplate object, however I failed to find where exactly were it configured, need further exploration.
+
+#### d. deploy the new workloads.yaml then you should see the pod running, if no typos.
+```
+k get all
+```
+
+```
+k logs -f pod/position-simulator-554d74f9c9-wg4lr  
+```
+
+inspecting the logs from the position-simulator container
+![Alt text](image-4.png)
+
+And don't forget to port-forward the fleetman-queue, if you want to see the messages in the queue from localhost:
+
+```
+kubectl port-forward svc/fleetman-queue 30010:8161 
+```
+in localhost:30010 you should see a bunch of messages already sent to queue.
+![Alt text](image-5.png)
