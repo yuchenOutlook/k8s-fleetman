@@ -21,3 +21,34 @@ Single Responsiblity of a microservice is key, and also well defined interfaces 
 Instead of using a single, integrated database that contains all the integration of tables and data schemas.
 
 <span style="color:red"> **Each microservice will maintain its own dataStore!!!** <span>
+
+==================================
+
+# Deploy the microservices:
+
+## 1. Deploy the queue
+
+ #### a. first is to create deployment for ActiveMq, in case the queue crashes, it will auto-healing and it will be easy to upgrade.
+
+The context resides in workloads.yaml
+
+```
+kubectl apply -f workloads.yaml
+```
+
+Then deploy the webapp service
+```
+kubectl apply -f services.yaml
+```
+
+#### b. In minikube, in order to see it in localhost, run the port-forwarding command:
+
+```
+ kubectl port-forward svc/fleetman-queue 30010:8161 
+```
+![Alt text](image.png)
+Go to http://localhost:30010/
+
+Use "admin" as username and password to sign in.
+
+### 2. 
