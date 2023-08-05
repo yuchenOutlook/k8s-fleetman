@@ -57,6 +57,6 @@ spec:
     - name: http
       # usually this is the port number REST API is listening on
       port: 8080
-      nodePort: 30020
+      # nodePort: 30020
   # type: NodePort
   type: ClusterIP

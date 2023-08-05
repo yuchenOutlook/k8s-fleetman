@@ -210,3 +210,8 @@ GO to http://localhost:30020/
 You should see the time and Fleetman API Gateway:
 
 ![Alt text](image-8.png)
+
+
+# After changing the image version to fit-in my M1 Chip macos, pheww~~ it worked!
+Tips: you will need to wait, for around 15 mins, for everything to deploy and settle from zero.
+![Alt text](image-9.png)
