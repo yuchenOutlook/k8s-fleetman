@@ -189,3 +189,24 @@ then you go to http://localhost:30020/vehicles/City%20Truck , it should give you
 
 #### e. We then change the nodePort type to clusterIp, for the service to work within the cluster and to be isolated from the outside cluster.
 
+
+### 4. Deploy api-gateway
+
+#### a. This step is just normal, get to make changes in workloads.yaml and service.yaml, add another deployment and another service for api-gateway in these two files, and use 
+
+```
+kubectl apply -f workloads.yaml
+kubectl apply -f services.yaml
+```
+since we've made the api-gateway as nodePort for now. 
+
+when you use port-forward for it to work in minikube:
+
+```
+kubectl port-forward svc/fleetman-api-gateway 30020:8161
+```
+
+GO to http://localhost:30020/ 
+You should see the time and Fleetman API Gateway:
+
+![Alt text](image-8.png)
