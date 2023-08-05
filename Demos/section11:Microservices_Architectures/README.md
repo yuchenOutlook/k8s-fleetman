@@ -153,3 +153,39 @@ kubectl port-forward svc/fleetman-queue 30010:8161
 ```
 in localhost:30010 you should see a bunch of messages already sent to queue.
 ![Alt text](image-5.png)
+
+### 3. Deploy the fleetman-position-tracker
+
+#### a. created the deployment in workloads.yaml file. Change the container name to what they should be using, although you could see that usually the container's name doesn't really matter that much, even if you missed that.
+
+```
+kubectl apply -f workloads.yaml
+```
+
+After the deployment is done, you could check to see that the messages in the activeMQ is gone(it cumulated 200+ in previous step).
+
+#### b. craete a new service called fleetman-position-tracker, in the services.yaml file.
+The port number to expose is 8080, this is usually the port a service is designed to listen to, type is NodePort at first try.
+
+```
+kubectl apply -f services.yaml
+```
+
+You should see service running by now
+![Alt text](image-6.png)
+
+#### c. After the service being deployed, don't forget to port forward for minikube to work locally.
+
+```
+kubectl port-forward svc/fleetman-position-tracker 30020:8080
+```
+
+
+#### d. go http://localhost:30020 you should see "white label error". It's good cause apache is runing .
+
+then you go to http://localhost:30020/vehicles/City%20Truck , it should give you the exact location of a city truck for testing purpose
+
+![Alt text](image-7.png)
+
+#### e. We then change the nodePort type to clusterIp, for the service to work within the cluster and to be isolated from the outside cluster.
+
