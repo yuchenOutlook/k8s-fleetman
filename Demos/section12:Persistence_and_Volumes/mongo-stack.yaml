@@ -15,6 +15,15 @@ spec:
       containers:
       - name: mongodb
         image: mongo:7.0.0-rc10-jammy
+        volumeMounts:
+          - name: mongodb-persistent-storage
+            # mongo stores its data in /data/db
+            mountPath: /data/db
+      volumes:
+        - name: mongodb-persistent-storage
+          hostPath:
+            path: /mnt/some_mongo_data
+            type: DirectoryOrCreate
 
 ---
 kind: Service
