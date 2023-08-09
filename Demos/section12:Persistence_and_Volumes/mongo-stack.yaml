@@ -21,9 +21,9 @@ spec:
             mountPath: /data/db
       volumes:
         - name: mongodb-persistent-storage
-          hostPath:
-            path: /mnt/some_mongo_data
-            type: DirectoryOrCreate
+          # need a pointer to the configuration of How we want the mount to be implemented
+          persistentVolumeClaim:
+            claimName: mongo-pvc
 
 ---
 kind: Service
