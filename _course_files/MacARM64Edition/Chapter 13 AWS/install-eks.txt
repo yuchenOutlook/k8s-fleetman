@@ -63,7 +63,7 @@ Use the console to add a user to your new group, and then use "aws configure" to
 Warning: check the current default kubernetes version supplied with EKS and install a matching version of kubectl
 
 export RELEASE=<enter default eks version number here. Eg 1.17.0>
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v$RELEASE/bin/linux/amd64/kubectl
+curl -LO "https://dl.k8s.io/release/v$RELEASE/bin/linux/amd64/kubectl"
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
